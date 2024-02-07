@@ -6,11 +6,13 @@ import {
   Image,
   SimpleGrid,
 } from "@mantine/core";
-import { IconChevronDown, IconMenu2 } from "@tabler/icons-react";
+import { IconChevronDown, IconLogin2, IconMenu2 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { Drawer } from "@/Components/Drawer/index.jsx";
+import { router } from "@inertiajs/react";
 
-export const Header = ({ title }) => {
+export const Header = ({ title,auth }) => {
+  console.log(auth, 'Header')
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
@@ -63,15 +65,19 @@ export const Header = ({ title }) => {
       <Flex justify="flex-end">
         <Button
           px={20}
-          h={40}
-          c="gray.9"
+          h={40}   
+          c="gray.9" 
           radius={8}
-          variant="subtle"
-          // color={themeColor}
+          leftSection={!auth.user && <IconLogin2 />}
+          variant={!auth.user ? "outline" :"subtle"}
+          // color={themeColor} 
+          onClick={!auth.user && (() => router.get(route('login')))}
         >
-          <Avatar size={28} />
 
-          <IconChevronDown />
+          {!auth.user ? "Masuk Akun" : (<>  <Avatar size={28} />
+
+<IconChevronDown /></>)}
+        
         </Button>
       </Flex>
     </SimpleGrid>

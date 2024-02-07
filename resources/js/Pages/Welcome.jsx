@@ -45,10 +45,11 @@ const Home = ({
   citizens,
   jobs,
   consumptions,
-  prayers,
+  prayers, 
   socialMedias,
   citizenSocialMedias,
 }) => {
+
   const [selectedData, setSelectedData] = useState("Warga");
   const [selectedSubData, setSelectedSubData] = useState("");
   const [graphicData, setGraphicData] = useState(null);
@@ -247,7 +248,7 @@ const Home = ({
                       <Pie data={graphicData} />
                     )}
                   </>
-                )}
+                ) : "belum ada"}
               </Stack>
             </Box>
 

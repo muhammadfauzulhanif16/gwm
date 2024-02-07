@@ -6,6 +6,8 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 
 export const AppLayout = ({ children, title, meta ,auth}) => {
+
+
   useEffect(() => {
     if (meta) {
       notifications.show({
@@ -20,7 +22,7 @@ export const AppLayout = ({ children, title, meta ,auth}) => {
 
   return (
     <Box bg="gray.3" mih="100vh">
-      <Head>
+      <Head> 
         <title>{title}</title>
         <link
           rel="icon"
@@ -29,7 +31,7 @@ export const AppLayout = ({ children, title, meta ,auth}) => {
         />
       </Head>
 
-      <Header title={title} />
+      <Header title={title} auth={auth} />
 
       <Box
         py={40}
