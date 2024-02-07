@@ -26,7 +26,7 @@ import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Index = ({ title, description, meta, socialMedias, citizens }) => {
+const Index = ({ title, description, meta, socialMedias, citizens,auth }) => {
   const data = {
     labels: citizens.map(({ social_media_name }) => social_media_name),
     datasets: [
@@ -55,23 +55,22 @@ const Index = ({ title, description, meta, socialMedias, citizens }) => {
   };
 
   return (
-    <AppLayout title={title} meta={meta}>
+    <AppLayout title={title} meta={meta} auth={auth}>
       <Stack gap={40}>
         <PageHeader
           title={title}
           description={description}
           actions={
-            <Button
-              h={40}
-              radius={8}
-              px={20}
-              // color={themeColor}
-              leftSection={<IconPlus />}
-              onClick={() => router.get(route("social-medias.create"))}
-            >
-              Tambah
-            </Button>
-          }
+            auth.user &&  <Button
+            h={40}
+            radius={8}
+            px={20}
+            leftSection={<IconPlus />}
+            onClick={() => router.get(route("citizens.create"))}
+          >
+            Tambah
+          </Button>
+           }
         />
 
         <Tabs
@@ -125,6 +124,7 @@ const Index = ({ title, description, meta, socialMedias, citizens }) => {
                   header: "Diperbarui Pada",
                 },
               ]}
+              enableRowActions={auth.user}
               renderRowActions={({ row }) => (
                 <Menu
                   withArrow

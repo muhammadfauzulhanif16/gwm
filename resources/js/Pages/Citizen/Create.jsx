@@ -29,7 +29,7 @@ const Create = ({
   professions,
   consumptions,
   prayers,
-  socialMedias,
+  socialMedias,auth
 }) => {
   const form = useForm({
     citizens: [
@@ -168,7 +168,7 @@ const Create = ({
   };
 
   return (
-    <AppLayout title={title}>
+    <AppLayout title={title} auth={auth}>
       <form
         style={{
           display: "flex",

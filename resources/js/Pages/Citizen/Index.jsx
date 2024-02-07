@@ -26,7 +26,7 @@ import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Index = ({ title, description, meta, citizens }) => {
+const Index = ({ title, description, meta, citizens,auth }) => {
   const genders = Object.entries(
     citizens.reduce((counts, { gender }) => {
       counts[gender] = (counts[gender] || 0) + 1;
@@ -62,21 +62,21 @@ const Index = ({ title, description, meta, citizens }) => {
   };
 
   return (
-    <AppLayout title={title} meta={meta}>
+    <AppLayout title={title} meta={meta} auth={auth}>
       <Stack gap={40}>
         <PageHeader
           title={title}
           description={description}
           actions={
-            <Button
-              h={40}
-              radius={8}
-              px={20}
-              leftSection={<IconPlus />}
-              onClick={() => router.get(route("citizens.create"))}
-            >
-              Tambah
-            </Button>
+           auth.user &&  <Button
+           h={40}
+           radius={8}
+           px={20}
+           leftSection={<IconPlus />}
+           onClick={() => router.get(route("citizens.create"))}
+         >
+           Tambah
+         </Button>
           }
         />
 
@@ -130,7 +130,8 @@ const Index = ({ title, description, meta, citizens }) => {
                   header: "Diperbarui Pada",
                 },
               ]}
-              renderRowActions={({ row }) => (
+              enableRowActions={auth.user}
+              renderRowActions={auth.user && (({ row }) => (
                 <Menu
                   withArrow
                   trigger="click-hover"
@@ -205,7 +206,7 @@ const Index = ({ title, description, meta, citizens }) => {
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
-              )}
+              ))}
             />
           </Tabs.Panel>
 

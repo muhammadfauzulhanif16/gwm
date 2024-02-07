@@ -11,7 +11,7 @@ export const DataTable = (props) => (
         },
       },
       enableRowNumbers: true,
-      enableRowActions: true,
+      // enableRowActions: true,
       enableStickyHeader: true,
       enableStickyFooter: true,
       mantinePaperProps: {

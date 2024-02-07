@@ -4,13 +4,13 @@ import { IconCornerDownLeft } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Edit = ({ title, description, socialMedias, socialMedia }) => {
+const Edit = ({ title, description, socialMedias, socialMedia,auth }) => {
   const form = useForm({
     name: socialMedia.name || "",
   });
 
   return (
-    <AppLayout title={title}>
+    <AppLayout title={title} auth={auth}>
       <form
         style={{
           display: "flex",

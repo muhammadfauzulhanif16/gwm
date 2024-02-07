@@ -14,7 +14,7 @@ import { IconCornerDownLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Edit = ({ title, description, prayers, prayer }) => {
+const Edit = ({ title, description, prayers, prayer ,auth}) => {
   const form = useForm({
     name: prayer.name || "",
     choices: prayer.choices || [
@@ -42,7 +42,7 @@ const Edit = ({ title, description, prayers, prayer }) => {
   };
 
   return (
-    <AppLayout title={title}>
+    <AppLayout title={title} auth={auth}>
       <form
         style={{
           display: "flex",

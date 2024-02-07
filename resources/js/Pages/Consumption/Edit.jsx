@@ -4,13 +4,13 @@ import { IconCornerDownLeft } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Edit = ({ title, description, consumptions, consumption }) => {
+const Edit = ({ title, description, consumptions, consumption,auth }) => {
   const form = useForm({
     name: consumption.name || "",
   });
 
   return (
-    <AppLayout title={title}>
+    <AppLayout title={title} auth={auth}>
       <form
         style={{
           display: "flex",

@@ -22,24 +22,24 @@ import { DataTable } from "@/Components/DataTable.jsx";
 import { router } from "@inertiajs/react";
 import { modals } from "@mantine/modals";
 
-const Index = ({ title, description, meta, prayers }) => {
+const Index = ({ title, description, meta, prayers,auth }) => {
   return (
-    <AppLayout title={title} meta={meta}>
+    <AppLayout title={title} meta={meta} auth={auth}>
       <Stack gap={40}>
         <PageHeader
           title={title}
           description={description}
           actions={
-            <Button
-              h={40}
-              radius={8}
-              px={20}
-              leftSection={<IconPlus />}
-              onClick={() => router.get(route("prayers.create"))}
-            >
-              Tambah
-            </Button>
-          }
+            auth.user &&  <Button
+            h={40}
+            radius={8}
+            px={20}
+            leftSection={<IconPlus />}
+            onClick={() => router.get(route("citizens.create"))}
+          >
+            Tambah
+          </Button>
+           }
         />
 
         <Tabs
@@ -92,6 +92,7 @@ const Index = ({ title, description, meta, prayers }) => {
                   header: "Diperbarui Pada",
                 },
               ]}
+              enableRowActions={auth.user}
               renderRowActions={({ row }) => (
                 <Menu
                   withArrow

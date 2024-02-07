@@ -14,7 +14,7 @@ import { IconCornerDownLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Create = ({ title, description, jobs }) => {
+const Create = ({ title, description, jobs,auth }) => {
   const form = useForm({
     jobs: [
       {
@@ -35,7 +35,7 @@ const Create = ({ title, description, jobs }) => {
   };
 
   return (
-    <AppLayout title={title}>
+    <AppLayout title={title} auth={auth}>
       <form
         style={{
           display: "flex",
