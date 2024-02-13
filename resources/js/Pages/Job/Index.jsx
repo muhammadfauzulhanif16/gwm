@@ -13,7 +13,7 @@ import { DataTable } from "@/Components/DataTable.jsx";
 import { router } from "@inertiajs/react";
 import { modals } from "@mantine/modals";
 
-const Index = ({ title, description, meta, jobs, auth}) => {
+const Index = ({ title, description, meta, jobs, auth }) => {
   return (
     <AppLayout title={title} meta={meta} auth={auth}>
       <Stack gap={40}>
@@ -21,16 +21,18 @@ const Index = ({ title, description, meta, jobs, auth}) => {
           title={title}
           description={description}
           actions={
-            auth.user &&  <Button
-            h={40}
-            radius={8}
-            px={20}
-            leftSection={<IconPlus />}
-            onClick={() => router.get(route("citizens.create"))}
-          >
-            Tambah
-          </Button>
-           }
+            auth.user && (
+              <Button
+                h={40}
+                radius={8}
+                px={20}
+                leftSection={<IconPlus />}
+                onClick={() => router.get(route("citizens.create"))}
+              >
+                Tambah
+              </Button>
+            )
+          }
         />
 
         <Tabs
@@ -38,7 +40,6 @@ const Index = ({ title, description, meta, jobs, auth}) => {
           styles={{
             tab: {
               padding: 20,
-              borderRadius: 8,
             },
             panel: {
               marginTop: 20,

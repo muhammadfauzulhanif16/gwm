@@ -20,6 +20,7 @@ class AuthenticatedSessionController extends Controller
     public function create(): Response
     {
         return Inertia::render('Auth/Login', [
+            'title' => 'Masuk Akun',
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
         ]);
@@ -34,7 +35,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // return redirect()->intended(RouteServiceProvider::HOME)->with('meta', [
+        //     'title' => 'Beranda',
+        //     'description' => 'Ringkasan data dari warga, pekerjaan, konsumsi, ibadah dan media sosial.',
+        // ]);
+        return to_route('home')->with('meta', [
+            'status' => true,
+            'title' => 'Berhasil masuk akun',
+        ]);
     }
 
     /**
@@ -48,6 +56,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return to_route('home')->with('meta', [
+            'status' => true,
+            'title' => 'Berhasil keluar akun',
+        ]);
     }
 }

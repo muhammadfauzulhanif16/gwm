@@ -10,7 +10,7 @@ import { Notifications } from "@mantine/notifications";
 import { GetRandomColors } from "@/Utilities/GetRandomColors.js";
 import { ModalsProvider } from "@mantine/modals";
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const appName = import.meta.env.VITE_APP_NAME || "Geolokasi Warga Muhammadiyah";
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,

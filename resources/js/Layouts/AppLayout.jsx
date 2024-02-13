@@ -5,15 +5,13 @@ import { useEffect } from "react";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 
-export const AppLayout = ({ children, title, meta ,auth}) => {
-
-
+export const AppLayout = ({ children, title, meta, auth }) => {
   useEffect(() => {
     if (meta) {
       notifications.show({
+        px: 20,
         title: meta.title,
         color: meta.status ? "green" : "red",
-        radius: 8,
         withCloseButton: false,
         icon: meta.status ? <IconCheck /> : <IconX />,
       });
@@ -22,7 +20,7 @@ export const AppLayout = ({ children, title, meta ,auth}) => {
 
   return (
     <Box bg="gray.3" mih="100vh">
-      <Head> 
+      <Head>
         <title>{title}</title>
         <link
           rel="icon"
@@ -31,10 +29,10 @@ export const AppLayout = ({ children, title, meta ,auth}) => {
         />
       </Head>
 
-      <Header title={title} auth={auth} />
+      {title !== "Masuk Akun" && <Header title={title} auth={auth} />}
 
       <Box
-        py={40}
+        py={auth.user && 40}
         px={{
           base: 16,
           sm: 24,

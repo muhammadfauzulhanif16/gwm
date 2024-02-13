@@ -4,15 +4,20 @@ import {
   Button,
   Flex,
   Image,
+  Menu,
   SimpleGrid,
 } from "@mantine/core";
-import { IconChevronDown, IconLogin2, IconMenu2 } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconLogin2,
+  IconMenu2,
+  IconSettings2,
+} from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { Drawer } from "@/Components/Drawer/index.jsx";
 import { router } from "@inertiajs/react";
 
-export const Header = ({ title,auth }) => {
-  console.log(auth, 'Header')
+export const Header = ({ title, auth }) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
@@ -31,7 +36,8 @@ export const Header = ({ title,auth }) => {
       spacing={0}
       styles={{
         root: {
-          borderRadius: 8,
+          borderBottomLeftRadius: 8,
+          borderBottomRightRadius: 8,
         },
       }}
       style={{
@@ -41,14 +47,7 @@ export const Header = ({ title,auth }) => {
       <Flex>
         <Drawer opened={opened} close={close} title={title} />
 
-        <ActionIcon
-          size={40}
-          radius={8}
-          variant="subtle"
-          c="gray.9"
-          // color={themeColor}
-          onClick={open}
-        >
+        <ActionIcon size={40} variant="subtle" c="gray.9" onClick={open}>
           <IconMenu2 />
         </ActionIcon>
       </Flex>
@@ -63,22 +62,69 @@ export const Header = ({ title,auth }) => {
       </Flex>
 
       <Flex justify="flex-end">
-        <Button
-          px={20}
-          h={40}   
-          c="gray.9" 
-          radius={8}
-          leftSection={!auth.user && <IconLogin2 />}
-          variant={!auth.user ? "outline" :"subtle"}
-          // color={themeColor} 
-          onClick={!auth.user && (() => router.get(route('login')))}
-        >
+        {auth.user ? (
+          <Menu position="bottom-end">
+            <Menu.Target>
+              <Button px={20} h={40} c="gray.9" variant="subtle">
+                <Avatar size={28} radius={8}>
+                  A
+                </Avatar>
 
-          {!auth.user ? "Masuk Akun" : (<>  <Avatar size={28} />
+                <IconChevronDown />
+              </Button>
+            </Menu.Target>
 
-<IconChevronDown /></>)}
-        
-        </Button>
+            <Menu.Dropdown
+              style={{
+                padding: 8,
+              }}
+            >
+              <Menu.Label>Akun</Menu.Label>
+              <Menu.Item leftSection={<IconSettings2 />} h={40} px={20}>
+                Pengaturan
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconLogin2 />}
+                color="red"
+                h={40}
+                px={20}
+                onClick={() => router.post(route("logout"))}
+              >
+                Keluar
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        ) : (
+          <>
+            <Button
+              display={{
+                base: "none",
+                sm: "block",
+              }}
+              px={20}
+              h={40}
+              c="gray.9"
+              variant="outline"
+              leftSection={<IconLogin2 />}
+              onClick={() => router.get(route("login"))}
+            >
+              Masuk
+            </Button>
+
+            <ActionIcon
+              display={{
+                base: "block",
+                sm: "none",
+              }}
+              size={40}
+              variant="outline"
+              c="gray.9"
+              onClick={() => router.get(route("login"))}
+            >
+              <IconLogin2 />
+            </ActionIcon>
+          </>
+        )}
       </Flex>
     </SimpleGrid>
   );

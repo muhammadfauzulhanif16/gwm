@@ -13,7 +13,13 @@ export const Drawer = ({ opened, close, title }) => {
     <DrawerMantine.Root opened={opened} onClose={close} size={320}>
       <DrawerMantine.Overlay />
 
-      <DrawerMantine.Content bg="gray.0" radius={8}>
+      <DrawerMantine.Content
+        bg="gray.0"
+        style={{
+          borderTopRightRadius: 8,
+          borderBottomRightRadius: 8,
+        }}
+      >
         <DrawerMantine.Header
           bg="gray.0"
           py={20}
@@ -24,14 +30,7 @@ export const Drawer = ({ opened, close, title }) => {
             lg: 40,
           }}
         >
-          <ActionIcon
-            size={40}
-            radius={8}
-            variant="subtle"
-            c="gray.9"
-            // color={themeColor}
-            onClick={close}
-          >
+          <ActionIcon size={40} variant="subtle" c="gray.9" onClick={close}>
             <IconX />
           </ActionIcon>
         </DrawerMantine.Header>
@@ -53,10 +52,8 @@ export const Drawer = ({ opened, close, title }) => {
                 h={40}
                 w="100%"
                 variant={title.includes(label) ? "light" : "subtle"}
-                radius={8}
                 leftSection={icon}
                 style={{ display: "flex" }}
-                // color={themeColor}
                 c={title.includes(label) ? "" : "gray.7"}
                 onClick={() => router.get(route(r))}
               >

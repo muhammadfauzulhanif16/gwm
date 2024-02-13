@@ -14,7 +14,7 @@ import { IconCornerDownLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Edit = ({ title, description, prayers, prayer ,auth}) => {
+const Edit = ({ title, description, prayers, prayer, auth }) => {
   const form = useForm({
     name: prayer.name || "",
     choices: prayer.choices || [
@@ -112,9 +112,9 @@ const Edit = ({ title, description, prayers, prayer ,auth}) => {
               Opsi
             </Text>
 
-            <Stack gap={20}>
+            <Stack gap={12}>
               {form.data.choices.map((choice, id) => (
-                <Group gap={20} key={id}>
+                <Group gap={8} key={id}>
                   <TextInput
                     autoFocus
                     radius={8}
@@ -158,7 +158,6 @@ const Edit = ({ title, description, prayers, prayer ,auth}) => {
 
                   <ActionIcon
                     size={40}
-                    radius={8}
                     variant="light"
                     color="red"
                     onClick={() => removeChoice(id)}
@@ -178,12 +177,11 @@ const Edit = ({ title, description, prayers, prayer ,auth}) => {
             base: "column",
             xs: "row",
           }}
-          gap={20}
+          gap={8}
         >
           <Button
             h={40}
             px={20}
-            radius={8}
             variant="outline"
             leftSection={<IconPlus />}
             onClick={addChoice}

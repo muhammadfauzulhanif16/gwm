@@ -40,16 +40,16 @@ export const options = {
 
 const Home = ({
   auth,
+  meta,
   title,
   description,
   citizens,
   jobs,
   consumptions,
-  prayers, 
+  prayers,
   socialMedias,
   citizenSocialMedias,
 }) => {
-
   const [selectedData, setSelectedData] = useState("Warga");
   const [selectedSubData, setSelectedSubData] = useState("");
   const [graphicData, setGraphicData] = useState(null);
@@ -127,7 +127,7 @@ const Home = ({
   }, [selectedData]);
 
   return (
-    <AppLayout title={title} description={description} auth={auth}>
+    <AppLayout title={title} description={description} auth={auth} meta={meta}>
       <Stack gap={40}>
         <PageHeader title={title} description={description} />
 
@@ -136,7 +136,7 @@ const Home = ({
             data={{
               citizens: citizens.length,
               jobs: jobs.length,
-              consumptions: consumptions.length,  
+              consumptions: consumptions.length,
               prayers: prayers.length,
               socialMedias: socialMedias.length,
             }}
@@ -248,7 +248,9 @@ const Home = ({
                       <Pie data={graphicData} />
                     )}
                   </>
-                ) : "belum ada"}
+                ) : (
+                  "belum ada"
+                )}
               </Stack>
             </Box>
 

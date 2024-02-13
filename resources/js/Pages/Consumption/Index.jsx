@@ -13,7 +13,7 @@ import { DataTable } from "@/Components/DataTable.jsx";
 import { router } from "@inertiajs/react";
 import { modals } from "@mantine/modals";
 
-const Index = ({ title, description, meta, consumptions,auth }, props) => {
+const Index = ({ title, description, meta, consumptions, auth }, props) => {
   return (
     <AppLayout title={title} meta={meta} auth={auth}>
       <Stack gap={40}>
@@ -21,16 +21,34 @@ const Index = ({ title, description, meta, consumptions,auth }, props) => {
           title={title}
           description={description}
           actions={
-            auth.user &&  <Button
-            h={40}
-            radius={8}
-            px={20}
-            leftSection={<IconPlus />}
-            onClick={() => router.get(route("citizens.create"))}
-          >
-            Tambah
-          </Button>
-           }
+            auth.user && (
+              <>
+                <ActionIcon
+                  display={{
+                    base: "block",
+                    sm: "none",
+                  }}
+                  size={40}
+                  onClick={() => router.get(route("consumptions.create"))}
+                >
+                  <IconPlus />
+                </ActionIcon>
+
+                <Button
+                  display={{
+                    base: "none",
+                    sm: "block",
+                  }}
+                  h={40}
+                  px={20}
+                  leftSection={<IconPlus />}
+                  onClick={() => router.get(route("consumptions.create"))}
+                >
+                  Tambah
+                </Button>
+              </>
+            )
+          }
         />
 
         <Tabs
@@ -38,7 +56,6 @@ const Index = ({ title, description, meta, consumptions,auth }, props) => {
           styles={{
             tab: {
               padding: 20,
-              borderRadius: 8,
             },
             panel: {
               marginTop: 20,

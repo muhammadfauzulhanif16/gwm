@@ -16,7 +16,7 @@ import { IconCornerDownLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Create = ({ title, description, prayers,auth }) => {
+const Create = ({ title, description, prayers, auth }) => {
   const form = useForm({
     prayers: [
       {
@@ -109,7 +109,7 @@ const Create = ({ title, description, prayers,auth }) => {
           >
             {form.data.prayers.map((prayer, prayerId) => (
               <Accordion.Item key={prayerId} value={`prayer-${prayerId}`}>
-                <Center gap={20} px={20} py={10}>
+                <Center px={20} py={8}>
                   <Accordion.Control pr={20} c="gray.8">
                     <Text fw={500}>
                       {prayer.name} (Ibadah {prayerId + 1})
@@ -181,10 +181,10 @@ const Create = ({ title, description, prayers,auth }) => {
                           Opsi
                         </Text>
 
-                        <Stack gap={20}>
+                        <Stack gap={12}>
                           {prayer.choices.map((choice, choiceId) => (
                             <Group
-                              gap={20}
+                              gap={8}
                               key={choiceId}
                               mb={form.hasErrors && 20}
                             >
@@ -291,12 +291,11 @@ const Create = ({ title, description, prayers,auth }) => {
             base: "column",
             xs: "row",
           }}
-          gap={20}
+          gap={8}
         >
           <Button
             h={40}
             px={20}
-            radius={8}
             variant="outline"
             leftSection={<IconPlus />}
             onClick={addPrayer}
@@ -308,9 +307,11 @@ const Create = ({ title, description, prayers,auth }) => {
           <Button
             disabled={
               form.hasErrors ||
-              form.data.prayers.some((prayer) => !prayer.name) ||
-              form.data.prayers.some((prayer) =>
-                prayer.choices.some((choice) => !choice.name),
+              form.data.prayers.some(
+                (prayer) =>
+                  !prayer.name ||
+                  (prayer.choices &&
+                    prayer.choices.some((choice) => !choice.name)),
               )
             }
             loading={form.processing}
@@ -318,7 +319,6 @@ const Create = ({ title, description, prayers,auth }) => {
             type="submit"
             h={40}
             px={20}
-            radius={8}
             leftSection={<IconCornerDownLeft />}
             rightSection={<Kbd>Enter</Kbd>}
           >

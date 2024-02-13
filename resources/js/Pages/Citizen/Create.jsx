@@ -29,7 +29,8 @@ const Create = ({
   professions,
   consumptions,
   prayers,
-  socialMedias,auth
+  socialMedias,
+  auth,
 }) => {
   const form = useForm({
     citizens: [
@@ -1053,6 +1054,7 @@ const Create = ({
                     >
                       <SimpleGrid gap={20} cols={{ base: 1, xs: 2 }}>
                         <MultiSelect
+                          autosize
                           label="Harian"
                           autoFocus
                           checkIconPosition="right"
@@ -1074,7 +1076,9 @@ const Create = ({
                             .map(({ name }) => name)}
                           styles={{
                             input: {
-                              padding: 20,
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "8px 20px",
                             },
                             label: {
                               marginBottom: 8,
@@ -1120,7 +1124,9 @@ const Create = ({
                             .map(({ name }) => name)}
                           styles={{
                             input: {
-                              padding: 20,
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "8px 20px",
                             },
                             label: {
                               marginBottom: 8,
@@ -1166,7 +1172,9 @@ const Create = ({
                             .map(({ name }) => name)}
                           styles={{
                             input: {
-                              padding: 20,
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "8px 20px",
                             },
                             label: {
                               marginBottom: 8,
@@ -1199,7 +1207,7 @@ const Create = ({
                           searchable
                           clearable
                           variant="filled"
-                          placeholder="Pilih profesi"
+                          placeholder="Pilih konsumsi"
                           data={consumptions
                             .filter(
                               ({ name }) =>
@@ -1212,7 +1220,9 @@ const Create = ({
                             .map(({ name }) => name)}
                           styles={{
                             input: {
-                              padding: 20,
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "8px 20px",
                             },
                             label: {
                               marginBottom: 8,
@@ -1315,6 +1325,7 @@ const Create = ({
                       <MultiSelect
                         label="Aplikasi"
                         autoFocus
+                        hidePickedOptions
                         checkIconPosition="right"
                         radius={8}
                         nothingFoundMessage="Tidak ada aplikasi"
@@ -1328,7 +1339,9 @@ const Create = ({
                         }))}
                         styles={{
                           input: {
-                            padding: 20,
+                            display: "flex",
+                            alignItems: "center",
+                            padding: "8px 20px",
                           },
                           label: {
                             marginBottom: 8,

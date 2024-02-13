@@ -14,7 +14,7 @@ import { IconCornerDownLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Create = ({ title, description, socialMedias,auth }) => {
+const Create = ({ title, description, socialMedias, auth }) => {
   const form = useForm({
     socialMedias: [
       {
@@ -61,12 +61,11 @@ const Create = ({ title, description, socialMedias,auth }) => {
             Nama
           </Text>
 
-          <Stack gap={20}>
+          <Stack gap={12}>
             {form.data.socialMedias.map((socialMedia, id) => (
-              <Group gap={20} key={id} mb={form.hasErrors && 20}>
+              <Group gap={8} key={id}>
                 <TextInput
                   autoFocus
-                  radius={8}
                   variant="filled"
                   placeholder={`Masukkan nama media sosial (${id + 1})`}
                   styles={{
@@ -106,7 +105,6 @@ const Create = ({ title, description, socialMedias,auth }) => {
 
                 <ActionIcon
                   size={40}
-                  radius={8}
                   variant="light"
                   color="red"
                   onClick={() => removeSocialMedia(id)}
@@ -125,12 +123,11 @@ const Create = ({ title, description, socialMedias,auth }) => {
             base: "column",
             xs: "row",
           }}
-          gap={20}
+          gap={8}
         >
           <Button
             h={40}
             px={20}
-            radius={8}
             variant="outline"
             leftSection={<IconPlus />}
             onClick={addSocialMedia}
@@ -149,7 +146,6 @@ const Create = ({ title, description, socialMedias,auth }) => {
             type="submit"
             h={40}
             px={20}
-            radius={8}
             leftSection={<IconCornerDownLeft />}
             rightSection={<Kbd>Enter</Kbd>}
           >

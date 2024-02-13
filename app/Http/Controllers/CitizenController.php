@@ -11,7 +11,7 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Cache;
     use Inertia\Inertia;
-    use Str;
+    use Illuminate\Support\Str;
 
     class CitizenController extends Controller
     {

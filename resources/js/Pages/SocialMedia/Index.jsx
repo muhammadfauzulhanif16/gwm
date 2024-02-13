@@ -26,7 +26,7 @@ import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Index = ({ title, description, meta, socialMedias, citizens,auth }) => {
+const Index = ({ title, description, meta, socialMedias, citizens, auth }) => {
   const data = {
     labels: citizens.map(({ social_media_name }) => social_media_name),
     datasets: [
@@ -61,16 +61,34 @@ const Index = ({ title, description, meta, socialMedias, citizens,auth }) => {
           title={title}
           description={description}
           actions={
-            auth.user &&  <Button
-            h={40}
-            radius={8}
-            px={20}
-            leftSection={<IconPlus />}
-            onClick={() => router.get(route("citizens.create"))}
-          >
-            Tambah
-          </Button>
-           }
+            auth.user && (
+              <>
+                <ActionIcon
+                  display={{
+                    base: "block",
+                    sm: "none",
+                  }}
+                  size={40}
+                  onClick={() => router.get(route("social-medias.create"))}
+                >
+                  <IconPlus />
+                </ActionIcon>
+
+                <Button
+                  display={{
+                    base: "none",
+                    sm: "block",
+                  }}
+                  h={40}
+                  px={20}
+                  leftSection={<IconPlus />}
+                  onClick={() => router.get(route("social-medias.create"))}
+                >
+                  Tambah
+                </Button>
+              </>
+            )
+          }
         />
 
         <Tabs
@@ -78,13 +96,11 @@ const Index = ({ title, description, meta, socialMedias, citizens,auth }) => {
           styles={{
             tab: {
               padding: 20,
-              borderRadius: 8,
             },
             panel: {
               marginTop: 20,
             },
           }}
-          // color={themeColor}
         >
           <Tabs.List grow>
             <Tabs.Tab
@@ -128,21 +144,17 @@ const Index = ({ title, description, meta, socialMedias, citizens,auth }) => {
               renderRowActions={({ row }) => (
                 <Menu
                   withArrow
+                  position="bottom-end"
                   trigger="click-hover"
                   styles={{
                     dropdown: {
                       padding: 8,
-                      borderRadius: 8,
-                    },
-                    item: {
-                      borderRadius: 8,
                     },
                   }}
                 >
                   <Menu.Target>
                     <ActionIcon
                       size={40}
-                      radius={8}
                       variant="subtle"
                       color="gray.9"
                       c="gray.9"
@@ -167,7 +179,6 @@ const Index = ({ title, description, meta, socialMedias, citizens,auth }) => {
                           styles: {
                             content: {
                               padding: 20,
-                              borderRadius: 8,
                             },
                             header: {
                               padding: 0,

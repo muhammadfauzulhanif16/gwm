@@ -26,7 +26,7 @@ import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Index = ({ title, description, meta, citizens,auth }) => {
+const Index = ({ title, description, meta, citizens, auth }) => {
   const genders = Object.entries(
     citizens.reduce((counts, { gender }) => {
       counts[gender] = (counts[gender] || 0) + 1;
@@ -68,15 +68,17 @@ const Index = ({ title, description, meta, citizens,auth }) => {
           title={title}
           description={description}
           actions={
-           auth.user &&  <Button
-           h={40}
-           radius={8}
-           px={20}
-           leftSection={<IconPlus />}
-           onClick={() => router.get(route("citizens.create"))}
-         >
-           Tambah
-         </Button>
+            auth.user && (
+              <Button
+                h={40}
+                radius={8}
+                px={20}
+                leftSection={<IconPlus />}
+                onClick={() => router.get(route("citizens.create"))}
+              >
+                Tambah
+              </Button>
+            )
           }
         />
 
@@ -85,7 +87,6 @@ const Index = ({ title, description, meta, citizens,auth }) => {
           styles={{
             tab: {
               padding: 20,
-              borderRadius: 8,
             },
             panel: {
               marginTop: 20,
@@ -131,82 +132,85 @@ const Index = ({ title, description, meta, citizens,auth }) => {
                 },
               ]}
               enableRowActions={auth.user}
-              renderRowActions={auth.user && (({ row }) => (
-                <Menu
-                  withArrow
-                  trigger="click-hover"
-                  styles={{
-                    dropdown: {
-                      padding: 8,
-                      borderRadius: 8,
-                    },
-                    item: {
-                      borderRadius: 8,
-                    },
-                  }}
-                >
-                  <Menu.Target>
-                    <ActionIcon
-                      size={40}
-                      radius={8}
-                      variant="subtle"
-                      color="gray.9"
-                      c="gray.9"
-                    >
-                      <IconDots />
-                    </ActionIcon>
-                  </Menu.Target>
+              renderRowActions={
+                auth.user &&
+                (({ row }) => (
+                  <Menu
+                    withArrow
+                    trigger="click-hover"
+                    styles={{
+                      dropdown: {
+                        padding: 8,
+                        borderRadius: 8,
+                      },
+                      item: {
+                        borderRadius: 8,
+                      },
+                    }}
+                  >
+                    <Menu.Target>
+                      <ActionIcon
+                        size={40}
+                        radius={8}
+                        variant="subtle"
+                        color="gray.9"
+                        c="gray.9"
+                      >
+                        <IconDots />
+                      </ActionIcon>
+                    </Menu.Target>
 
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      leftSection={<IconEdit />}
-                      onClick={() =>
-                        router.get(route("citizens.edit", row.original.id))
-                      }
-                    >
-                      Ubah
-                    </Menu.Item>
-                    <Menu.Item
-                      leftSection={<IconTrash />}
-                      onClick={() =>
-                        modals.openConfirmModal({
-                          styles: {
-                            content: {
-                              padding: 20,
-                              borderRadius: 8,
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        leftSection={<IconEdit />}
+                        onClick={() =>
+                          router.get(route("citizens.edit", row.original.id))
+                        }
+                      >
+                        Ubah
+                      </Menu.Item>
+                      <Menu.Item
+                        leftSection={<IconTrash />}
+                        onClick={() =>
+                          modals.openConfirmModal({
+                            styles: {
+                              content: {
+                                padding: 20,
+                                borderRadius: 8,
+                              },
+                              header: {
+                                padding: 0,
+                                minHeight: 0,
+                                backgroundColor: "transparent",
+                              },
+                              body: {
+                                padding: 0,
+                              },
                             },
-                            header: {
-                              padding: 0,
-                              minHeight: 0,
-                              backgroundColor: "transparent",
-                            },
-                            body: {
-                              padding: 0,
-                            },
-                          },
-                          title: (
-                            <Text fw={500} c="gray.9">
-                              Hapus {row.original.name}?
-                            </Text>
-                          ),
-                          centered: true,
-                          withCloseButton: false,
-                          labels: {
-                            confirm: "Hapus",
-                            cancel: "Batal",
-                          },
-                          onConfirm: () =>
-                            router.delete(
-                              route("citizens.destroy", row.original.id),
+                            title: (
+                              <Text fw={500} c="gray.9">
+                                Hapus {row.original.name}?
+                              </Text>
                             ),
-                        })
-                      }
-                    >
-                      Hapus
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              ))}
+                            centered: true,
+                            withCloseButton: false,
+                            labels: {
+                              confirm: "Hapus",
+                              cancel: "Batal",
+                            },
+                            onConfirm: () =>
+                              router.delete(
+                                route("citizens.destroy", row.original.id),
+                              ),
+                          })
+                        }
+                      >
+                        Hapus
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                ))
+              }
             />
           </Tabs.Panel>
 
