@@ -119,6 +119,7 @@ const Login = ({ title, auth, meta }) => {
                 w="100%"
                 px={20}
                 h={40}
+                loaderProps={{ type: "dots" }}
                 disabled={
                   form.hasErrors ||
                   form.data.username === "" ||
