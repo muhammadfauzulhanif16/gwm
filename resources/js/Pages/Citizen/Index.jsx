@@ -33,19 +33,21 @@ import { router } from "@inertiajs/react";
 import { modals } from "@mantine/modals";
 import { Pie } from "react-chartjs-2";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { GetChartColors } from "@/Utilities/GetChartColors.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Index = ({ title, description, meta, citizens, auth, genders }) => {
-  // console.log(citizens);
+  const colors = GetChartColors(citizens.length);
+
   const data = {
     labels: genders.map(({ name }) => name),
     datasets: [
       {
         label: "orang",
         data: genders.map(({ citizen_genders_count }) => citizen_genders_count),
-        backgroundColor: ["rgba(54, 162, 235, 0.2)", "rgba(255, 99, 132, 0.2)"],
-        borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 99, 132, 1)"],
+               backgroundColor: colors.map((color) => color[0]),
+        borderColor: colors.map((color) => color[1]),
         borderWidth: 1,
       },
     ],

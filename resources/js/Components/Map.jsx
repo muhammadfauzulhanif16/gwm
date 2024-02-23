@@ -24,60 +24,60 @@ export const Map = ({ citizens }) => {
           center: [longitude, latitude],
         });
 
-        // map.current.on("style.load", () => {
-        //   map.current.setFog({});
-        // });
+        map.current.on("style.load", () => {
+          map.current.setFog({});
+        });
 
-        // const secondsPerRevolution = 120;
-        // const maxSpinZoom = 5;
-        // const slowSpinZoom = 3;
+        const secondsPerRevolution = 120;
+        const maxSpinZoom = 5;
+        const slowSpinZoom = 3;
 
-        // let userInteracting = false;
+        let userInteracting = false;
 
-        // function spinGlobe() {
-        //   const zoom = map.current.getZoom();
-        //   if (spinEnabled && !userInteracting && zoom < maxSpinZoom) {
-        //     let distancePerSecond = 360 / secondsPerRevolution;
-        //     if (zoom > slowSpinZoom) {
-        //       const zoomDif =
-        //         (maxSpinZoom - zoom) / (maxSpinZoom - slowSpinZoom);
-        //       distancePerSecond *= zoomDif;
-        //     }
-        //     const center = map.current.getCenter();
-        //     center.lng -= distancePerSecond;
-        //     map.current.easeTo({ center, duration: 1000, easing: (n) => n });
-        //   }
-        // }
+        function spinGlobe() {
+          const zoom = map.current.getZoom();
+          if (spinEnabled && !userInteracting && zoom < maxSpinZoom) {
+            let distancePerSecond = 360 / secondsPerRevolution;
+            if (zoom > slowSpinZoom) {
+              const zoomDif =
+                (maxSpinZoom - zoom) / (maxSpinZoom - slowSpinZoom);
+              distancePerSecond *= zoomDif;
+            }
+            const center = map.current.getCenter();
+            center.lng -= distancePerSecond;
+            map.current.easeTo({ center, duration: 1000, easing: (n) => n });
+          }
+        }
 
-        // map.current.on("mousedown", () => {
-        //   userInteracting = true;
-        // });
+        map.current.on("mousedown", () => {
+          userInteracting = true;
+        });
 
-        // map.current.on("mouseup", () => {
-        //   userInteracting = false;
-        //   spinGlobe();
-        // });
+        map.current.on("mouseup", () => {
+          userInteracting = false;
+          spinGlobe();
+        });
 
-        // map.current.on("dragend", () => {
-        //   userInteracting = false;
-        //   spinGlobe();
-        // });
+        map.current.on("dragend", () => {
+          userInteracting = false;
+          spinGlobe();
+        });
 
-        // map.current.on("pitchend", () => {
-        //   userInteracting = false;
-        //   spinGlobe();
-        // });
+        map.current.on("pitchend", () => {
+          userInteracting = false;
+          spinGlobe();
+        });
 
-        // map.current.on("rotateend", () => {
-        //   userInteracting = false;
-        //   spinGlobe();
-        // });
+        map.current.on("rotateend", () => {
+          userInteracting = false;
+          spinGlobe();
+        });
 
-        // map.current.on("moveend", () => {
-        //   spinGlobe();
-        // });
+        map.current.on("moveend", () => {
+          spinGlobe();
+        });
 
-        // spinGlobe();
+        spinGlobe();
 
         const popup = new mapboxgl.Popup({ offset: 25 }).setText(
           "Lokasi Anda saat ini",

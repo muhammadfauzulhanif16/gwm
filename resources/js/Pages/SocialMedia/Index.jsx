@@ -29,7 +29,6 @@ import { GetChartColors } from "@/Utilities/GetChartColors.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Index = ({ title, description, meta, socialMedias, citizens, auth }) => {
-  console.log(citizens, "citizens");
 
   const colors = GetChartColors(citizens.length);
   const data = {

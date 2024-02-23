@@ -42,10 +42,10 @@ const Edit = ({
     },
     consumptions: citizen.consumptions || [],
     prayers: citizen.prayers || [],
-    social_medias: citizen.social_medias || [],
+    social_medias:  citizen.social_medias ||[],
   });
 
-  console.log(form.data);
+ 
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -832,8 +832,7 @@ const Edit = ({
                 searchable
                 clearable
                 defaultValue={form.data.consumptions
-                  .filter((consumption) => consumption.time_period === "Harian")
-                  .map(({ value }) => value)}
+                  .filter((consumption) => consumption.time_period === "Harian").map(({values}) => values)[0]}
                 variant="filled"
                 placeholder="Pilih konsumsi"
                 data={consumptions
@@ -869,10 +868,7 @@ const Edit = ({
               <MultiSelect
                 label="Pekanan"
                 defaultValue={form.data.consumptions
-                  .filter(
-                    (consumption) => consumption.time_period === "Pekanan",
-                  )
-                  .map(({ value }) => value)}
+                  .filter((consumption) => consumption.time_period === "Pekanan").map(({values}) => values)[0]}
                 hidePickedOptions
                 checkIconPosition="right"
                 radius={8}
@@ -923,7 +919,7 @@ const Edit = ({
                   .filter(
                     (consumption) => consumption.time_period === "Bulanan",
                   )
-                  .map(({ value }) => value)}
+                  .map(({ values }) => values)[0]}
                 variant="filled"
                 placeholder="Pilih konsumsi"
                 data={consumptions
@@ -965,7 +961,7 @@ const Edit = ({
                   .filter(
                     (consumption) => consumption.time_period === "Tahunan",
                   )
-                  .map(({ value }) => value)}
+                  .map(({ values }) => values)[0]}
                 nothingFoundMessage="Tidak ada konsumsi"
                 searchable
                 clearable
@@ -1013,7 +1009,7 @@ const Edit = ({
               },
             }}
           >
-            <Grid grow>
+             <Grid grow>
               {prayers.map((prayer) => (
                 <Grid.Col
                   key={prayer.id}
@@ -1058,7 +1054,7 @@ const Edit = ({
                   />
                 </Grid.Col>
               ))}
-            </Grid>
+            </Grid> 
           </Fieldset>
 
           <Fieldset
@@ -1071,7 +1067,7 @@ const Edit = ({
               },
             }}
           >
-            <MultiSelect
+             <MultiSelect
               label="Aplikasi"
               hidePickedOptions
               checkIconPosition="right"
@@ -1118,7 +1114,7 @@ const Edit = ({
                 }
               }}
               error={form.errors[`social_medias`]}
-            />
+            /> 
           </Fieldset>
         </Stack>
 

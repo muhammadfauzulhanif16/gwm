@@ -26,7 +26,6 @@ import { Bar, Pie } from "react-chartjs-2";
 import { Map } from "@/Components/Map";
 import { StatList } from "@/Components/Stats/StatList";
 import { GetChartColors } from "@/Utilities/GetChartColors";
-import autocolors from "chartjs-plugin-autocolors";
 
 ChartJS.register(
   CategoryScale,
@@ -35,8 +34,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement,
-  autocolors,
+  ArcElement
 );
 
 export const options = {
