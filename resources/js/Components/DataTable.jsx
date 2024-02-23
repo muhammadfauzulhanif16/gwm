@@ -17,7 +17,7 @@ export const DataTable = (props) => (
       mantinePaperProps: {
         style: {
           borderRadius: 8,
-          height: "75vh",
+          minHeight: "100vh",
           // flexGrow: 1,
           flexDirection: "column",
           display: "flex",

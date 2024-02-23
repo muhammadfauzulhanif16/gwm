@@ -11,7 +11,6 @@
         public function up(): void
         {
             Schema::create('citizen_social_medias', function (Blueprint $table) {
-//                $table->id();
                 $table->foreignUuid('citizen_id')->constrained('citizens')->cascadeOnDelete();
                 $table->foreignUuid('social_media_id')->constrained('social_medias')->cascadeOnDelete();
             });

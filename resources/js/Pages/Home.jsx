@@ -1,6 +1,15 @@
 import { AppLayout } from "@/Layouts/AppLayout.jsx";
 import { Stats } from "@/Components/Stats/index.jsx";
-import { Box, Grid, Select, SimpleGrid, Stack, Text } from "@mantine/core";
+import {
+  Box,
+  Center,
+  Grid,
+  Select,
+  SimpleGrid,
+  Stack,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
 import { useEffect, useState } from "react";
 import {
   ArcElement,
@@ -14,6 +23,10 @@ import {
 } from "chart.js";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 import { Bar, Pie } from "react-chartjs-2";
+import { Map } from "@/Components/Map";
+import { StatList } from "@/Components/Stats/StatList";
+import { GetChartColors } from "@/Utilities/GetChartColors";
+import autocolors from "chartjs-plugin-autocolors";
 
 ChartJS.register(
   CategoryScale,
@@ -23,6 +36,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   ArcElement,
+  autocolors,
 );
 
 export const options = {
@@ -33,7 +47,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Chart.js Bar Chart",
+      text: "Konsumsi",
     },
   },
 };
@@ -48,83 +62,57 @@ const Home = ({
   consumptions,
   prayers,
   socialMedias,
-  citizenSocialMedias,
+  data,
 }) => {
-  const [selectedData, setSelectedData] = useState("Warga");
+  const [selectedData, setSelectedData] = useState(data[0]?.title);
   const [selectedSubData, setSelectedSubData] = useState("");
-  const [graphicData, setGraphicData] = useState(null);
 
   useEffect(() => {
-    let data;
-
-    switch (selectedData) {
-      case "Warga":
-        data = {
-          labels: Object.entries(
-            citizens.reduce((counts, { gender }) => {
-              counts[gender] = (counts[gender] || 0) + 1;
-              return counts;
-            }, {}),
-          )
-            .map(([name, citizen_count]) => ({ name, citizen_count }))
-            .map(({ name }) => name),
-          datasets: [
-            {
-              label: "orang",
-              data: Object.entries(
-                citizens.reduce((counts, { gender }) => {
-                  counts[gender] = (counts[gender] || 0) + 1;
-                  return counts;
-                }, {}),
-              )
-                .map(([name, citizen_count]) => ({ name, citizen_count }))
-                .map(({ citizen_count }) => citizen_count),
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-              ],
-            },
-          ],
-        };
-        break;
-      case "Pekerjaan":
-        // Generate data for Pekerjaan
-        break;
-      case "Konsumsi":
-        // Generate data for Konsumsi
-        break;
-      case "Ibadah":
-        // Generate data for Ibadah
-        break;
-      case "Media Sosial":
-        data = {
-          labels: citizenSocialMedias.map(
-            ({ social_media_name }) => social_media_name,
-          ),
-          datasets: [
-            {
-              label: "orang",
-              data: citizenSocialMedias.map(
-                ({ citizen_count }) => citizen_count,
-              ),
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)",
-              ],
-            },
-          ],
-        };
-        break;
-      default:
-        data = {};
-    }
-
-    setGraphicData(data);
+    const subDataName = ["Ibadah", "Konsumsi"].includes(selectedData)
+      ? data.find(({ title }) => title === selectedData)?.subData[0]?.name
+      : null;
+    setSelectedSubData(subDataName);
   }, [selectedData]);
+
+  const selectedDataObj = data.find(({ title }) => title === selectedData);
+  const selectedSubDataObj = selectedDataObj?.subData?.find(
+    ({ name }) => name === selectedSubData,
+  );
+
+  const length =
+    selectedData === "Ibadah" && selectedSubData
+      ? selectedSubDataObj?.choices?.length
+      : selectedData === "Konsumsi" && selectedSubData
+        ? selectedSubDataObj?.consumptions?.length
+        : selectedDataObj?.subData?.length;
+
+  const colors = GetChartColors(length);
+
+  const labels =
+    selectedSubDataObj?.choices?.map(({ name }) => name) ||
+    selectedSubDataObj?.consumptions?.map(({ name }) => name) ||
+    selectedDataObj?.subData?.map(({ name }) => name);
+  const dataValues =
+    selectedSubDataObj?.choices?.map(
+      ({ citizen_prayers_count }) => citizen_prayers_count,
+    ) ||
+    selectedSubDataObj?.consumptions?.map(
+      ({ citizen_count }) => citizen_count,
+    ) ||
+    selectedDataObj?.subData?.map(({ citizen_count }) => citizen_count);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "orang",
+        data: dataValues,
+        backgroundColor: colors.map((color) => color[0]),
+        borderColor: colors.map((color) => color[1]),
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <AppLayout title={title} description={description} auth={auth} meta={meta}>
@@ -149,125 +137,147 @@ const Home = ({
             }}
             spacing={20}
           >
-            <Box
+            <Stack
+              gap={20}
+              bg="gray.0"
               style={{
                 borderRadius: 8,
               }}
               p={20}
-              bg="gray.0"
             >
-              <Stack gap={20}>
-                <Text fw={700} fz={24} c="gray.8">
-                  Grafik
-                </Text>
+              <Text fw={700} fz={24} c="gray.8">
+                Grafik
+              </Text>
 
-                <Grid grow>
-                  <Grid.Col span={6}>
-                    <Select
-                      label="Data"
-                      styles={{
-                        input: {
-                          height: 40,
-                        },
-                        label: {
-                          fontSize: 16,
-                          color: "#495057",
-                          marginBottom: 8,
-                        },
-                        dropdown: {
-                          padding: 8,
-                          borderRadius: 8,
-                        },
-                        option: {
-                          borderRadius: 8,
-                        },
-                      }}
-                      radius={8}
-                      variant="filled"
-                      placeholder="Pilih Data"
-                      defaultValue="Warga"
-                      allowDeselect={false}
-                      data={[
-                        "Warga",
-                        "Pekerjaan",
-                        "Konsumsi",
-                        "Ibadah",
-                        "Media Sosial",
-                      ]}
-                      checkIconPosition="right"
-                      onChange={(value) => setSelectedData(value)}
-                    />
-                  </Grid.Col>
+              <SimpleGrid
+                cols={
+                  selectedData === "Konsumsi" || selectedData === "Ibadah"
+                    ? 2
+                    : 1
+                }
+              >
+                <Select
+                  styles={{
+                    input: {
+                      height: 40,
+                    },
+                    label: {
+                      fontSize: 16,
+                      color: "#495057",
+                      marginBottom: 8,
+                    },
+                    dropdown: {
+                      padding: 8,
+                      borderRadius: 8,
+                    },
+                    option: {
+                      borderRadius: 8,
+                    },
+                  }}
+                  radius={8}
+                  variant="filled"
+                  placeholder="Pilih Data"
+                  defaultValue={selectedData}
+                  allowDeselect={false}
+                  data={data.map(({ title }) => title)}
+                  checkIconPosition="right"
+                  onChange={(value) => setSelectedData(value)}
+                />
 
-                  {(selectedData === "Konsumsi" ||
-                    selectedData === "Ibadah") && (
-                    <Grid.Col span={6}>
-                      <Select
-                        checkIconPosition="right"
-                        label="Data"
-                        styles={{
-                          input: {
-                            height: 40,
-                          },
-                          label: {
-                            fontSize: 16,
-                            color: "#495057",
-                            marginBottom: 8,
-                          },
-                          dropdown: {
-                            padding: 8,
-                            borderRadius: 8,
-                          },
-                          option: {
-                            borderRadius: 8,
-                          },
-                        }}
-                        radius={8}
-                        variant="filled"
-                        placeholder="Pilih Data"
-                        defaultValue="Warga"
-                        allowDeselect={false}
-                        data={[
-                          "Warga",
-                          "Pekerjaan",
-                          "Konsumsi",
-                          "Ibadah",
-                          "Media Sosial",
-                        ]}
-                        onChange={(value) => setSelectedData(value)}
-                      />
-                    </Grid.Col>
-                  )}
-                </Grid>
-
-                {graphicData ? (
-                  <>
-                    {selectedData === "Konsumsi" ? (
-                      <Bar options={options} data={graphicData} />
-                    ) : (
-                      <Pie data={graphicData} />
-                    )}
-                  </>
-                ) : (
-                  "belum ada"
+                {(selectedData === "Konsumsi" || selectedData === "Ibadah") && (
+                  <Select
+                    checkIconPosition="right"
+                    styles={{
+                      input: {
+                        height: 40,
+                      },
+                      label: {
+                        fontSize: 16,
+                        color: "#495057",
+                        marginBottom: 8,
+                      },
+                      dropdown: {
+                        padding: 8,
+                        borderRadius: 8,
+                      },
+                      option: {
+                        borderRadius: 8,
+                      },
+                    }}
+                    radius={8}
+                    variant="filled"
+                    placeholder="Pilih Data"
+                    allowDeselect={false}
+                    defaultValue={
+                      selectedData === "Ibadah"
+                        ? data.find(({ title }) => title === selectedData)
+                            ?.subData[0]?.name
+                        : selectedData === "Konsumsi"
+                          ? data.find(({ title }) => title === selectedData)
+                              ?.subData[0]?.name
+                          : null
+                    }
+                    data={data
+                      ?.find(({ title }) => title === selectedData)
+                      ?.subData?.map(({ name }) => name)}
+                    onChange={(value) => setSelectedSubData(value)}
+                  />
                 )}
-              </Stack>
-            </Box>
+              </SimpleGrid>
 
-            <Box
+              {data.find(({ title }) => title === selectedData)
+                ?.citizen_count ? (
+                <Center h="50vh" w="100%">
+                  <Pie data={chartData} />
+                </Center>
+              ) : (
+                <Center
+                  h="50vh"
+                  style={{
+                    borderRadius: 8,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 20,
+                    color: "gray.0",
+                  }}
+                >
+                  <ThemeIcon variant="light" size={40}>
+                    {
+                      StatList().find((stat) => stat.label === selectedData)
+                        .icon
+                    }
+                  </ThemeIcon>
+
+                  <Text fw={500} c="gray.7">
+                    Belum ada data {selectedData.toLowerCase()}
+                  </Text>
+                </Center>
+              )}
+            </Stack>
+
+            <Stack
+              gap={20}
               p={20}
               bg="gray.0"
               style={{
                 borderRadius: 8,
               }}
             >
-              <Stack gap={20}>
-                <Text fw={700} fz={24} c="gray.8">
-                  Lokasi Warga
-                </Text>
-                map
-              </Stack>
-            </Box>
+              <Text fw={700} fz={24} c="gray.8">
+                Lokasi Warga
+              </Text>
+
+              <Box
+                h={{
+                  base: "50vh",
+                  md: "60vh",
+                }}
+              >
+                <Map citizens={citizens} />
+              </Box>
+            </Stack>
           </SimpleGrid>
         </Stack>
       </Stack>

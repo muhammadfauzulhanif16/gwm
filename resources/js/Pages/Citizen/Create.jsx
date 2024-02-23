@@ -66,42 +66,46 @@ const Create = ({
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        form.data.citizens[0].personal.latitude = position.coords.latitude;
-        form.data.citizens[0].personal.longitude = position.coords.longitude;
+        form.data.citizens.forEach((citizen) => {
+          citizen.personal.latitude = position.coords.latitude;
+          citizen.personal.longitude = position.coords.longitude;
+        });
       });
     }
   }, [form]);
 
-  console.log(form.data);
-
-  const addConsumption = (value, citizenId, timePeriod) => {
-    let errorMessage = "";
-
-    if (!value || value.length === 0) {
-      errorMessage = `Konsumsi tidak boleh kosong`;
-    }
-
-    form.data.citizens[citizenId].consumptions = value.map((val) => ({
-      time_period: timePeriod,
-      value: val,
-    }));
-    form.setData("citizens", form.data.citizens);
-
-    if (errorMessage) {
+  const addConsumption = (values, citizenId, timePeriod) => {
+    if (!values || values.length === 0) {
+      const errorMessage = `Konsumsi tidak boleh kosong`;
       form.setError(
         `citizens.${citizenId}.consumptions.${timePeriod}`,
         errorMessage,
       );
-    } else {
-      form.clearErrors(`citizens.${citizenId}.consumptions.${timePeriod}`);
+      return;
     }
+
+    const uniqueValues = [...new Set(values)];
+
+    const existingValues = form.data.citizens[citizenId].consumptions.map(
+      (consumption) => consumption.value,
+    );
+    const newConsumptions = uniqueValues
+      .filter((value) => !existingValues.includes(value))
+      .map((value) => ({
+        time_period: timePeriod,
+        value: value,
+      }));
+
+    form.data.citizens[citizenId].consumptions.push(...newConsumptions);
+    form.setData("citizens", form.data.citizens);
+    form.clearErrors(`citizens.${citizenId}.consumptions.${timePeriod}`);
   };
 
   const addPrayer = (value, citizenId, prayerId) => {
     let errorMessage = "";
 
     if (!value || value.length === 0) {
-      errorMessage = `Prayer option cannot be empty`;
+      errorMessage = "Ibadah tidak boleh kosong";
     }
 
     // Find the prayer object in the prayers array
@@ -209,7 +213,7 @@ const Create = ({
           >
             {form.data.citizens.map((citizen, citizenId) => (
               <Accordion.Item key={citizenId} value={`citizen-${citizenId}`}>
-                <Center gap={20} px={20} py={10}>
+                <Center px={20} py={8}>
                   <Accordion.Control pr={20} c="gray.8">
                     <Text fw={500}>
                       {citizen.personal.name} (Warga {citizenId + 1})
@@ -218,7 +222,6 @@ const Create = ({
 
                   <ActionIcon
                     size={40}
-                    radius={8}
                     variant="light"
                     color="red"
                     onClick={() => removeCitizen(citizenId)}
@@ -1001,7 +1004,8 @@ const Create = ({
                             placeholder="Masukkan deskripsi pekerjaan"
                             styles={{
                               input: {
-                                padding: 20,
+                                padding: "8px 20px",
+                                height: 40,
                               },
                               label: {
                                 marginBottom: 8,
@@ -1054,7 +1058,7 @@ const Create = ({
                     >
                       <SimpleGrid gap={20} cols={{ base: 1, xs: 2 }}>
                         <MultiSelect
-                          autosize
+                          hidePickedOptions
                           label="Harian"
                           autoFocus
                           checkIconPosition="right"
@@ -1065,15 +1069,15 @@ const Create = ({
                           variant="filled"
                           placeholder="Pilih konsumsi"
                           data={consumptions
+                            .map(({ name }) => name)
                             .filter(
-                              ({ name }) =>
+                              (value) =>
                                 !form.data.citizens[
                                   citizenId
                                 ].consumptions.some(
-                                  (consumption) => consumption.value === name,
+                                  (consumption) => consumption.value === value,
                                 ),
-                            )
-                            .map(({ name }) => name)}
+                            )}
                           styles={{
                             input: {
                               display: "flex",
@@ -1092,12 +1096,12 @@ const Create = ({
                               borderRadius: 8,
                             },
                           }}
-                          onChange={(value) =>
-                            addConsumption(value, citizenId, "daily")
+                          onChange={(values) =>
+                            addConsumption(values, citizenId, "Harian")
                           }
                           error={
                             form.errors[
-                              `citizens.${citizenId}.consumptions.daily`
+                              `citizens.${citizenId}.consumptions.Harian`
                             ]
                           }
                         />
@@ -1105,6 +1109,7 @@ const Create = ({
                         <MultiSelect
                           label="Mingguan"
                           autoFocus
+                          hidePickedOptions
                           checkIconPosition="right"
                           radius={8}
                           nothingFoundMessage="Tidak ada konsumsi"
@@ -1113,15 +1118,15 @@ const Create = ({
                           variant="filled"
                           placeholder="Pilih konsumsi"
                           data={consumptions
+                            .map(({ name }) => name)
                             .filter(
-                              ({ name }) =>
+                              (value) =>
                                 !form.data.citizens[
                                   citizenId
                                 ].consumptions.some(
-                                  (consumption) => consumption.value === name,
+                                  (consumption) => consumption.value === value,
                                 ),
-                            )
-                            .map(({ name }) => name)}
+                            )}
                           styles={{
                             input: {
                               display: "flex",
@@ -1140,12 +1145,12 @@ const Create = ({
                               borderRadius: 8,
                             },
                           }}
-                          onChange={(value) =>
-                            addConsumption(value, citizenId, "weekly")
+                          onChange={(values) =>
+                            addConsumption(values, citizenId, "Pekanan")
                           }
                           error={
                             form.errors[
-                              `citizens.${citizenId}.consumptions.weekly`
+                              `citizens.${citizenId}.consumptions.Pekanan`
                             ]
                           }
                         />
@@ -1153,6 +1158,7 @@ const Create = ({
                         <MultiSelect
                           label="Bulanan"
                           autoFocus
+                          hidePickedOptions
                           checkIconPosition="right"
                           radius={8}
                           nothingFoundMessage="Tidak ada konsumsi"
@@ -1161,15 +1167,15 @@ const Create = ({
                           variant="filled"
                           placeholder="Pilih konsumsi"
                           data={consumptions
+                            .map(({ name }) => name)
                             .filter(
-                              ({ name }) =>
+                              (value) =>
                                 !form.data.citizens[
                                   citizenId
                                 ].consumptions.some(
-                                  (consumption) => consumption.value === name,
+                                  (consumption) => consumption.value === value,
                                 ),
-                            )
-                            .map(({ name }) => name)}
+                            )}
                           styles={{
                             input: {
                               display: "flex",
@@ -1188,12 +1194,12 @@ const Create = ({
                               borderRadius: 8,
                             },
                           }}
-                          onChange={(value) =>
-                            addConsumption(value, citizenId, "monthly")
+                          onChange={(values) =>
+                            addConsumption(values, citizenId, "Bulanan")
                           }
                           error={
                             form.errors[
-                              `citizens.${citizenId}.consumptions.monthly`
+                              `citizens.${citizenId}.consumptions.Bulanan`
                             ]
                           }
                         />
@@ -1201,6 +1207,7 @@ const Create = ({
                         <MultiSelect
                           label="Tahunan"
                           autoFocus
+                          hidePickedOptions
                           checkIconPosition="right"
                           radius={8}
                           nothingFoundMessage="Tidak ada konsumsi"
@@ -1209,15 +1216,15 @@ const Create = ({
                           variant="filled"
                           placeholder="Pilih konsumsi"
                           data={consumptions
+                            .map(({ name }) => name)
                             .filter(
-                              ({ name }) =>
+                              (value) =>
                                 !form.data.citizens[
                                   citizenId
                                 ].consumptions.some(
-                                  (consumption) => consumption.value === name,
+                                  (consumption) => consumption.value === value,
                                 ),
-                            )
-                            .map(({ name }) => name)}
+                            )}
                           styles={{
                             input: {
                               display: "flex",
@@ -1236,12 +1243,12 @@ const Create = ({
                               borderRadius: 8,
                             },
                           }}
-                          onChange={(value) =>
-                            addConsumption(value, citizenId, "yearly")
+                          onChange={(values) =>
+                            addConsumption(values, citizenId, "Tahunan")
                           }
                           error={
                             form.errors[
-                              `citizens.${citizenId}.consumptions.yearly`
+                              `citizens.${citizenId}.consumptions.Tahunan`
                             ]
                           }
                         />
@@ -1355,14 +1362,14 @@ const Create = ({
                             borderRadius: 8,
                           },
                         }}
-                        onChange={(value) => {
+                        onChange={(values) => {
                           let errorMessage = "";
 
-                          if (!value) {
+                          if (!values || values.length === 0) {
                             errorMessage = "Aplikasi tidak boleh kosong";
                           }
 
-                          form.data.citizens[citizenId].social_medias = value;
+                          form.data.citizens[citizenId].social_medias = values;
                           form.setData("citizens", form.data.citizens);
 
                           if (errorMessage) {
@@ -1377,7 +1384,7 @@ const Create = ({
                           }
                         }}
                         error={
-                          form.errors[`citizens.${citizenId}.csocial_medias`]
+                          form.errors[`citizens.${citizenId}.social_medias`]
                         }
                       />
                     </Fieldset>
@@ -1394,12 +1401,11 @@ const Create = ({
             base: "column",
             xs: "row",
           }}
-          gap={20}
+          gap={8}
         >
           <Button
             h={40}
             px={20}
-            radius={8}
             variant="outline"
             leftSection={<IconPlus />}
             onClick={addCitizen}
@@ -1409,13 +1415,24 @@ const Create = ({
           </Button>
 
           <Button
-            disabled={form.hasErrors}
+            disabled={
+              form.hasErrors ||
+              form.data.citizens.some((citizen) => {
+                return (
+                  Object.values(citizen.personal).some((value) => !value) ||
+                  Object.values(citizen.job).some((value) => !value) ||
+                  citizen.consumptions.length === 0 ||
+                  citizen.prayers.length === 0 ||
+                  citizen.social_medias.length === 0
+                );
+              })
+            }
             loading={form.processing}
             loaderProps={{ type: "dots" }}
             type="submit"
             h={40}
             px={20}
-            radius={8}
+            ius={8}
             leftSection={<IconCornerDownLeft />}
             rightSection={<Kbd>Enter</Kbd>}
           >

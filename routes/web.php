@@ -10,6 +10,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\UserController;
 use App\Models\Citizen;
+use App\Models\CitizenConsumption;
+use App\Models\CitizenJob;
+use App\Models\CitizenPrayer;
 use App\Models\CitizenSocialMedia;
 use App\Models\Consumption;
 use App\Models\Job;
@@ -33,10 +36,6 @@ use App\Models\Prayer;
 Route::get('/', function () {
     return Inertia::render('Home', [
         'meta' => session('meta'),
-        //            'canLogin' => Route::has('login'),
-        //            'canRegister' => Route::has('register'),
-        //            'laravelVersion' => Application::VERSION,
-        //            'phpVersion' => PHP_VERSION,
         'title' => 'Beranda',
         'description' => 'Ringkasan data dari warga, pekerjaan, konsumsi, ibadah dan media sosial.',
         'citizens' => Citizen::all(),
@@ -51,7 +50,64 @@ Route::get('/', function () {
                     'social_media_name' => $citizen->socialMedia->name,
                     'citizen_count' => $citizen->citizen_count
                 ];
-            })
+            }),
+        'data' => [
+            [
+                'title' => 'Warga',
+                'citizen_count' => Citizen::count(),
+                'subData' => Citizen::get()->groupBy('gender')->map(function ($items, $gender) {
+                    return [
+                        'name' => $gender,
+                        'citizen_count' => $items->count()
+                    ];
+                })->values()
+            ],
+            [
+                'title' => 'Pekerjaan',
+                'citizen_count' => Citizen::count(),
+                'subData' => Citizen::get()->groupBy('job_id')->map(function ($items, $job) {
+                    return [
+                        'name' => Job::find($job)->name,
+                        'citizen_count' => $items->count()
+                    ];
+                })->values()
+            ],
+            [
+                'title' => 'Konsumsi',
+                'citizen_count' => CitizenConsumption::count(),
+                'subData' => CitizenConsumption::get()->groupBy('time_period')->map(function ($items, $time_period) {
+                    return [
+                        'name' => $time_period,
+                        'consumptions' => $items->groupBy('consumption_id')->map(function ($consumptionItems, $consumption_id) {
+                            return [
+                                'name' => Consumption::find($consumption_id)->name,
+                                'citizen_count' => $consumptionItems->count()
+                            ];
+                        })->values()
+                    ];
+                })->values()
+            ],
+            [
+                'title' => 'Ibadah',
+                'citizen_count' => CitizenPrayer::count(),
+                'subData' => Prayer::with([
+                    'choices' => function ($query) {
+                        $query->withCount('citizenPrayers')
+                            ->having('citizen_prayers_count', '>', 0);
+                    },
+                ])->get()
+            ],
+            [
+                'title' => 'Media Sosial',
+                'citizen_count' => CitizenSocialMedia::count(),
+                'subData' => CitizenSocialMedia::get()->groupBy('social_media_id')->map(function ($items, $social_media) {
+                    return [
+                        'name' => SocialMedia::find($social_media)->name,
+                        'citizen_count' => $items->count()
+                    ];
+                })->values()
+            ]
+        ]
     ]);
 })->name('home');
 

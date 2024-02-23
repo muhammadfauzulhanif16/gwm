@@ -1,9 +1,19 @@
 import { AppLayout } from "@/Layouts/AppLayout.jsx";
-import { ActionIcon, Button, Menu, Stack, Tabs, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Center,
+  Menu,
+  Stack,
+  Tabs,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
 import {
   IconDots,
   IconEdit,
   IconGraph,
+  IconPackages,
   IconPlus,
   IconTable,
   IconTrash,
@@ -13,7 +23,7 @@ import { DataTable } from "@/Components/DataTable.jsx";
 import { router } from "@inertiajs/react";
 import { modals } from "@mantine/modals";
 
-const Index = ({ title, description, meta, consumptions, auth }, props) => {
+const Index = ({ title, description, meta, consumptions, auth, citizens }) => {
   return (
     <AppLayout title={title} meta={meta} auth={auth}>
       <Stack gap={40}>
@@ -84,103 +94,192 @@ const Index = ({ title, description, meta, consumptions, auth }, props) => {
           </Tabs.List>
 
           <Tabs.Panel value="table">
-            <DataTable
-              data={consumptions}
-              columns={[
-                {
-                  accessorKey: "name",
-                  header: "Nama",
-                },
-                {
-                  accessorKey: "created_at",
-                  header: "Dibuat Pada",
-                },
-                {
-                  accessorKey: "updated_at",
-                  header: "Diperbarui Pada",
-                },
-              ]}
-              enableRowActions={auth.user}
-              renderRowActions={({ row }) => (
-                <Menu
-                  withArrow
-                  trigger="click-hover"
-                  styles={{
-                    dropdown: {
-                      padding: 8,
-                      borderRadius: 8,
-                    },
-                    item: {
-                      borderRadius: 8,
-                    },
-                  }}
-                >
-                  <Menu.Target>
-                    <ActionIcon
-                      size={40}
-                      radius={8}
-                      variant="subtle"
-                      color="gray.9"
-                      c="gray.9"
-                    >
-                      <IconDots />
-                    </ActionIcon>
-                  </Menu.Target>
+            {consumptions.length ? (
+              <DataTable
+                data={consumptions}
+                columns={[
+                  {
+                    accessorKey: "name",
+                    header: "Nama",
+                  },
+                  {
+                    accessorKey: "created_at",
+                    header: "Dibuat Pada",
+                  },
+                  {
+                    accessorKey: "updated_at",
+                    header: "Diperbarui Pada",
+                  },
+                ]}
+                enableRowActions={auth.user}
+                renderRowActions={({ row }) => (
+                  <Menu
+                    position="bottom-end"
+                    withArrow
+                    trigger="click-hover"
+                    styles={{
+                      dropdown: {
+                        padding: 8,
+                      },
+                    }}
+                  >
+                    <Menu.Target>
+                      <ActionIcon
+                        size={40}
+                        variant="subtle"
+                        color="gray.9"
+                        c="gray.9"
+                      >
+                        <IconDots />
+                      </ActionIcon>
+                    </Menu.Target>
 
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      leftSection={<IconEdit />}
-                      onClick={() =>
-                        router.get(route("consumptions.edit", row.original.id))
-                      }
-                    >
-                      Ubah
-                    </Menu.Item>
-                    <Menu.Item
-                      leftSection={<IconTrash />}
-                      onClick={() =>
-                        modals.openConfirmModal({
-                          styles: {
-                            content: {
-                              padding: 20,
-                              borderRadius: 8,
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        color="yellow"
+                        leftSection={<IconEdit />}
+                        onClick={() =>
+                          router.get(
+                            route("consumptions.edit", row.original.id),
+                          )
+                        }
+                      >
+                        Ubah
+                      </Menu.Item>
+                      <Menu.Item
+                        color="red"
+                        leftSection={<IconTrash />}
+                        onClick={() =>
+                          modals.openConfirmModal({
+                            styles: {
+                              content: {
+                                padding: 20,
+                              },
+                              header: {
+                                padding: 0,
+                                minHeight: 0,
+                                backgroundColor: "transparent",
+                              },
+                              body: {
+                                padding: 0,
+                              },
                             },
-                            header: {
-                              padding: 0,
-                              minHeight: 0,
-                              backgroundColor: "transparent",
-                            },
-                            body: {
-                              padding: 0,
-                            },
-                          },
-                          title: (
-                            <Text fw={500} c="gray.9">
-                              Hapus {row.original.name}?
-                            </Text>
-                          ),
-                          centered: true,
-                          withCloseButton: false,
-                          labels: {
-                            confirm: "Hapus",
-                            cancel: "Batal",
-                          },
-                          onConfirm: () =>
-                            router.delete(
-                              route("consumptions.destroy", row.original.id),
+                            title: (
+                              <Text fw={500} c="gray.9">
+                                Hapus {row.original.name}?
+                              </Text>
                             ),
-                        })
-                      }
-                    >
-                      Hapus
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              )}
-            />
+                            centered: true,
+                            withCloseButton: false,
+                            labels: {
+                              confirm: "Hapus",
+                              cancel: "Batal",
+                            },
+                            onConfirm: () =>
+                              router.delete(
+                                route("consumptions.destroy", row.original.id),
+                              ),
+                          })
+                        }
+                      >
+                        Hapus
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                )}
+              />
+            ) : (
+              <Center
+                mih="50vh"
+                bg="gray.0"
+                style={{
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 20,
+                  color: "gray.0",
+                }}
+              >
+                <ThemeIcon variant="light" size={40}>
+                  <IconPackages />
+                </ThemeIcon>
+
+                <Text fw={500} c="gray.7">
+                  Belum ada data konsumsi
+                </Text>
+              </Center>
+            )}
           </Tabs.Panel>
 
-          <Tabs.Panel value="graphic">Messages tab content</Tabs.Panel>
+          <Tabs.Panel value="graphic">
+            {citizens.length ? (
+              <Stack gap={20}>
+                <Flex justify="flex-end">
+                  <Select
+                    w={{
+                      base: "100%",
+                      xs: "auto",
+                    }}
+                    autoFocus
+                    checkIconPosition="right"
+                    radius={8}
+                    nothingFoundMessage="Tidak ada ibadah"
+                    searchable
+                    value={selectedPrayer}
+                    variant="filled"
+                    placeholder="Pilih ibadah"
+                    data={prayers.map(({ name }) => name)}
+                    styles={{
+                      input: {
+                        padding: 20,
+                        height: 40,
+                      },
+                      label: {
+                        marginBottom: 8,
+                        color: "#495057",
+                      },
+                      dropdown: {
+                        padding: 8,
+                        borderRadius: 8,
+                      },
+                      option: {
+                        borderRadius: 8,
+                      },
+                    }}
+                    onChange={(value) => setSelectedPrayer(value)}
+                  />
+                </Flex>
+                <Center mih="100vh">
+                  <Pie data={data} />
+                </Center>
+              </Stack>
+            ) : (
+              <Center
+                p={20}
+                h="50vh"
+                bg="gray.0"
+                style={{
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 20,
+                  color: "gray.0",
+                }}
+              >
+                <ThemeIcon variant="light" size={40}>
+                  <IconPackages />
+                </ThemeIcon>
+
+                <Text fw={500} c="gray.7" align="center">
+                  Belum ada data konsumsi yang digunakan oleh warga
+                </Text>
+              </Center>
+            )}
+          </Tabs.Panel>
         </Tabs>
       </Stack>
     </AppLayout>

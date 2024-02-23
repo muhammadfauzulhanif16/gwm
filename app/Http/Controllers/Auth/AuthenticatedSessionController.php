@@ -22,7 +22,7 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('Auth/Login', [
             'title' => 'Masuk Akun',
             'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
+            'meta' => session('meta'),
         ]);
     }
 
@@ -31,18 +31,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            $request->authenticate();
+            $request->session()->regenerate();
 
-        $request->session()->regenerate();
-
-        // return redirect()->intended(RouteServiceProvider::HOME)->with('meta', [
-        //     'title' => 'Beranda',
-        //     'description' => 'Ringkasan data dari warga, pekerjaan, konsumsi, ibadah dan media sosial.',
-        // ]);
-        return to_route('home')->with('meta', [
-            'status' => true,
-            'title' => 'Berhasil masuk akun',
-        ]);
+            return to_route('home')->with('meta', [
+                'status' => true,
+                'title' => 'Berhasil masuk akun',
+                'message' => "Terautentikasi sebagai " . Auth::user()->username,
+            ]);
+        } catch (\Exception $e) {
+            return to_route('login')->with('meta', [
+                'status' => false,
+                'title' => 'Gagal masuk akun',
+                'message' => "Nama pengguna atau kata sandi salah",
+            ]);
+        }
     }
 
     /**
@@ -59,6 +63,7 @@ class AuthenticatedSessionController extends Controller
         return to_route('home')->with('meta', [
             'status' => true,
             'title' => 'Berhasil keluar akun',
+            'message' => "Sampai jumpa kembali!",
         ]);
     }
 }

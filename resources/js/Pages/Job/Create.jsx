@@ -14,7 +14,7 @@ import { IconCornerDownLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Create = ({ title, description, jobs,auth }) => {
+const Create = ({ title, description, jobs, auth }) => {
   const form = useForm({
     jobs: [
       {
@@ -61,12 +61,11 @@ const Create = ({ title, description, jobs,auth }) => {
             Nama
           </Text>
 
-          <Stack gap={20}>
+          <Stack gap={12}>
             {form.data.jobs.map((job, id) => (
-              <Group key={id} mb={form.hasErrors && 20}>
+              <Group key={id} mb={form.hasErrors && 20} gap={8}>
                 <TextInput
                   autoFocus
-                  radius={8}
                   variant="filled"
                   placeholder={`Masukkan nama pekerjaan (${id + 1})`}
                   styles={{
@@ -106,7 +105,6 @@ const Create = ({ title, description, jobs,auth }) => {
 
                 <ActionIcon
                   size={40}
-                  radius={8}
                   variant="light"
                   color="red"
                   onClick={() => removeJob(id)}
@@ -125,12 +123,11 @@ const Create = ({ title, description, jobs,auth }) => {
             base: "column",
             xs: "row",
           }}
-          gap={20}
+          gap={8}
         >
           <Button
             h={40}
             px={20}
-            radius={8}
             variant="outline"
             leftSection={<IconPlus />}
             onClick={addJob}
@@ -146,7 +143,6 @@ const Create = ({ title, description, jobs,auth }) => {
             type="submit"
             h={40}
             px={20}
-            radius={8}
             leftSection={<IconCornerDownLeft />}
             rightSection={<Kbd>Enter</Kbd>}
           >

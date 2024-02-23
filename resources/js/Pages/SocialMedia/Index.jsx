@@ -1,15 +1,16 @@
 import { AppLayout } from "@/Layouts/AppLayout.jsx";
 import {
   ActionIcon,
-  AspectRatio,
   Button,
   Center,
   Menu,
   Stack,
   Tabs,
   Text,
+  ThemeIcon,
 } from "@mantine/core";
 import {
+  IconApps,
   IconDots,
   IconEdit,
   IconGraph,
@@ -23,32 +24,24 @@ import { router } from "@inertiajs/react";
 import { modals } from "@mantine/modals";
 import { Pie } from "react-chartjs-2";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { GetChartColors } from "@/Utilities/GetChartColors.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Index = ({ title, description, meta, socialMedias, citizens, auth }) => {
+  console.log(citizens, "citizens");
+
+  const colors = GetChartColors(citizens.length);
   const data = {
-    labels: citizens.map(({ social_media_name }) => social_media_name),
+    labels: citizens.map(({ name }) => name),
     datasets: [
       {
         label: "orang",
-        data: citizens.map(({ citizen_count }) => citizen_count),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
+        data: citizens.map(
+          ({ citizen_social_medias_count }) => citizen_social_medias_count,
+        ),
+        backgroundColor: colors.map((color) => color[0]),
+        borderColor: colors.map((color) => color[1]),
         borderWidth: 1,
       },
     ],
@@ -124,103 +117,154 @@ const Index = ({ title, description, meta, socialMedias, citizens, auth }) => {
           </Tabs.List>
 
           <Tabs.Panel value="table">
-            <DataTable
-              data={socialMedias}
-              columns={[
-                {
-                  accessorKey: "name",
-                  header: "Nama",
-                },
-                {
-                  accessorKey: "created_at",
-                  header: "Dibuat Pada",
-                },
-                {
-                  accessorKey: "updated_at",
-                  header: "Diperbarui Pada",
-                },
-              ]}
-              enableRowActions={auth.user}
-              renderRowActions={({ row }) => (
-                <Menu
-                  withArrow
-                  position="bottom-end"
-                  trigger="click-hover"
-                  styles={{
-                    dropdown: {
-                      padding: 8,
-                    },
-                  }}
-                >
-                  <Menu.Target>
-                    <ActionIcon
-                      size={40}
-                      variant="subtle"
-                      color="gray.9"
-                      c="gray.9"
-                    >
-                      <IconDots />
-                    </ActionIcon>
-                  </Menu.Target>
+            {socialMedias.length ? (
+              <DataTable
+                data={socialMedias}
+                columns={[
+                  {
+                    accessorKey: "name",
+                    header: "Nama",
+                  },
+                  {
+                    accessorKey: "created_at",
+                    header: "Dibuat Pada",
+                  },
+                  {
+                    accessorKey: "updated_at",
+                    header: "Diperbarui Pada",
+                  },
+                ]}
+                enableRowActions={auth.user}
+                renderRowActions={({ row }) => (
+                  <Menu
+                    withArrow
+                    position="bottom-end"
+                    trigger="click-hover"
+                    styles={{
+                      dropdown: {
+                        padding: 8,
+                      },
+                    }}
+                  >
+                    <Menu.Target>
+                      <ActionIcon
+                        size={40}
+                        variant="subtle"
+                        color="gray.9"
+                        c="gray.9"
+                      >
+                        <IconDots />
+                      </ActionIcon>
+                    </Menu.Target>
 
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      leftSection={<IconEdit />}
-                      onClick={() =>
-                        router.get(route("social-medias.edit", row.original.id))
-                      }
-                    >
-                      Ubah
-                    </Menu.Item>
-                    <Menu.Item
-                      leftSection={<IconTrash />}
-                      onClick={() =>
-                        modals.openConfirmModal({
-                          styles: {
-                            content: {
-                              padding: 20,
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        color="yellow"
+                        leftSection={<IconEdit />}
+                        onClick={() =>
+                          router.get(
+                            route("social-medias.edit", row.original.id),
+                          )
+                        }
+                      >
+                        Ubah
+                      </Menu.Item>
+                      <Menu.Item
+                        color="red"
+                        leftSection={<IconTrash />}
+                        onClick={() =>
+                          modals.openConfirmModal({
+                            styles: {
+                              content: {
+                                padding: 20,
+                              },
+                              header: {
+                                padding: 0,
+                                minHeight: 0,
+                                backgroundColor: "transparent",
+                              },
+                              body: {
+                                padding: 0,
+                              },
                             },
-                            header: {
-                              padding: 0,
-                              minHeight: 0,
-                              backgroundColor: "transparent",
-                            },
-                            body: {
-                              padding: 0,
-                            },
-                          },
-                          title: (
-                            <Text fw={500} c="gray.9">
-                              Hapus {row.original.name}?
-                            </Text>
-                          ),
-                          centered: true,
-                          withCloseButton: false,
-                          labels: {
-                            confirm: "Hapus",
-                            cancel: "Batal",
-                          },
-                          onConfirm: () =>
-                            router.delete(
-                              route("social-medias.destroy", row.original.id),
+                            title: (
+                              <Text fw={500} c="gray.9">
+                                Hapus {row.original.name}?
+                              </Text>
                             ),
-                        })
-                      }
-                    >
-                      Hapus
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              )}
-            />
+                            centered: true,
+                            withCloseButton: false,
+                            labels: {
+                              confirm: "Hapus",
+                              cancel: "Batal",
+                            },
+                            onConfirm: () =>
+                              router.delete(
+                                route("social-medias.destroy", row.original.id),
+                              ),
+                          })
+                        }
+                      >
+                        Hapus
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                )}
+              />
+            ) : (
+              <Center
+                mih="50vh"
+                bg="gray.0"
+                style={{
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 20,
+                  color: "gray.0",
+                }}
+              >
+                <ThemeIcon variant="light" size={40}>
+                  <IconApps />
+                </ThemeIcon>
+
+                <Text fw={500} c="gray.7">
+                  Belum ada data media sosial
+                </Text>
+              </Center>
+            )}
           </Tabs.Panel>
 
           <Tabs.Panel value="graphic">
-            <AspectRatio ratio={16 / 9}>
-              <Center>
+            {citizens.length ? (
+              <Center mih="50vh">
                 <Pie data={data} />
               </Center>
-            </AspectRatio>
+            ) : (
+              <Center
+                p={20}
+                h="50vh"
+                bg="gray.0"
+                style={{
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 20,
+                  color: "gray.0",
+                }}
+              >
+                <ThemeIcon variant="light" size={40}>
+                  <IconApps />
+                </ThemeIcon>
+
+                <Text fw={500} c="gray.7" align="center">
+                  Belum ada data media sosial yang digunakan oleh warga
+                </Text>
+              </Center>
+            )}
           </Tabs.Panel>
         </Tabs>
       </Stack>

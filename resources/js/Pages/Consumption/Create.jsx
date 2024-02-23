@@ -14,7 +14,7 @@ import { IconCornerDownLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@inertiajs/react";
 import { PageHeader } from "@/Components/PageHeader.jsx";
 
-const Create = ({ title, description, consumptions,auth }) => {
+const Create = ({ title, description, consumptions, auth }) => {
   const form = useForm({
     consumptions: [
       {
@@ -61,9 +61,9 @@ const Create = ({ title, description, consumptions,auth }) => {
             Nama
           </Text>
 
-          <Stack gap={20}>
+          <Stack gap={12}>
             {form.data.consumptions.map((consumption, id) => (
-              <Group gap={20} key={id} mb={form.hasErrors && 20}>
+              <Group gap={8} key={id} mb={form.hasErrors && 20}>
                 <TextInput
                   autoFocus
                   radius={8}
@@ -106,7 +106,6 @@ const Create = ({ title, description, consumptions,auth }) => {
 
                 <ActionIcon
                   size={40}
-                  radius={8}
                   variant="light"
                   color="red"
                   onClick={() => removeConsumption(id)}
@@ -125,12 +124,11 @@ const Create = ({ title, description, consumptions,auth }) => {
             base: "column",
             xs: "row",
           }}
-          gap={20}
+          gap={8}
         >
           <Button
             h={40}
             px={20}
-            radius={8}
             variant="outline"
             leftSection={<IconPlus />}
             onClick={addConsumption}
@@ -149,7 +147,6 @@ const Create = ({ title, description, consumptions,auth }) => {
             type="submit"
             h={40}
             px={20}
-            radius={8}
             leftSection={<IconCornerDownLeft />}
             rightSection={<Kbd>Enter</Kbd>}
           >

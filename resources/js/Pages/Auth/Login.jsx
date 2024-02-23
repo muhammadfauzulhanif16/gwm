@@ -11,18 +11,22 @@ import {
   TextInput,
 } from "@mantine/core";
 
-const Login = ({ title, auth }) => {
+const Login = ({ title, auth, meta }) => {
   const form = useForm({
     username: "",
     password: "",
   });
 
-  // console.log(form.data);
-
   return (
-    <AppLayout title={title} auth={auth}>
+    <AppLayout title={title} auth={auth} meta={meta}>
       <Center mih="100vh">
         <Box
+          w={{
+            base: "100%",
+            sm: "75%",
+            md: "50%",
+            lg: "25%",
+          }}
           bg="gray.0"
           p={{
             base: 16,
@@ -88,8 +92,11 @@ const Login = ({ title, auth }) => {
                 placeholder="Masukkan kata sandi"
                 styles={{
                   input: {
-                    padding: 20,
                     height: 40,
+                  },
+                  innerInput: {
+                    paddingLeft: 20,
+                    paddingRight: 40,
                   },
                   label: { marginBottom: 8 },
                 }}
@@ -121,7 +128,7 @@ const Login = ({ title, auth }) => {
                 rightSection={<Kbd>Enter</Kbd>}
               >
                 Masuk Akun
-              </Button>{" "}
+              </Button>
             </Stack>
           </form>
         </Box>

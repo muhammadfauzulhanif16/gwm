@@ -11,6 +11,7 @@ export const AppLayout = ({ children, title, meta, auth }) => {
       notifications.show({
         px: 20,
         title: meta.title,
+        message: meta.message,
         color: meta.status ? "green" : "red",
         withCloseButton: false,
         icon: meta.status ? <IconCheck /> : <IconX />,
@@ -32,7 +33,7 @@ export const AppLayout = ({ children, title, meta, auth }) => {
       {title !== "Masuk Akun" && <Header title={title} auth={auth} />}
 
       <Box
-        py={auth.user && 40}
+        py={window.location.pathname === "/login" ? 0 : 40}
         px={{
           base: 16,
           sm: 24,

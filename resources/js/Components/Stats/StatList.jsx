@@ -5,44 +5,36 @@ import {
   IconPray,
   IconUsers,
 } from "@tabler/icons-react";
-import { GetRandomColors } from "@/Utilities/GetRandomColors.js";
-
-const colors = GetRandomColors(5);
 
 export const StatList = (data) => [
   {
     label: "Warga",
     icon: <IconUsers />,
-    totalData: data["citizens"],
-    color: colors[0],
+    totalData: data && data["citizens"],
     route: "citizens.index",
   },
   {
     label: "Pekerjaan",
     icon: <IconBriefcase2 />,
-    totalData: data["jobs"],
-    color: colors[1],
+    totalData: data && data["jobs"],
     route: "jobs.index",
   },
   {
     label: "Konsumsi",
     icon: <IconPackages />,
-    totalData: data["consumptions"],
-    color: colors[2],
+    totalData: data && data["consumptions"],
     route: "consumptions.index",
   },
   {
     label: "Ibadah",
     icon: <IconPray />,
-    totalData: data['prayers'],
-    color: colors[3],
+    totalData: data && data["prayers"],
     route: "prayers.index",
   },
   {
     label: "Media Sosial",
     icon: <IconApps />,
-    totalData: data["socialMedias"],
-    color: colors[4],
+    totalData: data && data["socialMedias"],
     route: "social-medias.index",
   },
 ];
